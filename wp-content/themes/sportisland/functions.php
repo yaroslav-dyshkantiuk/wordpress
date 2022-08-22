@@ -76,7 +76,7 @@ function si_register()
         'after_widget' => null
     ]);
 
-    register_widget('');
+    register_widget('si_widget_text');
 }
 
 function _si_assets_path($path)
