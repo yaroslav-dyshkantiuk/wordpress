@@ -1,7 +1,14 @@
 <?php
 
-require_once(__DIR__ . '/inc/widget-text.php');
-require_once(__DIR__ . '/inc/widget-contacts.php');
+$widgets = [
+    'widget-text.php',
+    'widget-contacts.php',
+    'widget-social-links.php'
+];
+
+foreach ($widgets as $w) {
+    require_once(__DIR__ . '/inc/' . $w);
+}
 
 add_action('after_setup_theme', 'si_setup');
 add_action('wp_enqueue_scripts', 'si_scripts');
@@ -85,6 +92,7 @@ function si_register()
 
     register_widget('si_widget_text');
     register_widget('si_widget_contacts');
+    register_widget('si_widget_social_links');
 }
 
 function _si_assets_path($path)
