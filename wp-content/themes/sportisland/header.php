@@ -27,10 +27,6 @@ if (!is_front_page()) {
                 'items_wrap' => '<ul class="%2$s">%3$s</ul>'
             ]);
             ?>
-            <!-- <address class="main-header__widget widget-contacts">
-                <a href="tel:88007003030" class="widget-contacts__phone"> 8 800 700 30 30 </a>
-                <p class="widget-contacts__address"> ул. Приречная 11 </p>
-            </address> -->
             <?php
             if (is_active_sidebar('si-header')) {
                 dynamic_sidebar('si-header');

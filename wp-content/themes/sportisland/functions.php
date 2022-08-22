@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/inc/widget-text.php');
+require_once(__DIR__ . '/inc/widget-contacts.php');
 
 add_action('after_setup_theme', 'si_setup');
 add_action('wp_enqueue_scripts', 'si_scripts');
@@ -64,6 +65,12 @@ function si_register()
         'after_widget' => null
     ]);
     register_sidebar([
+        'name' => 'Контакты в подвале',
+        'id' => 'si-footer',
+        'before_widget' => null,
+        'after_widget' => null
+    ]);
+    register_sidebar([
         'name' => 'Карта',
         'id' => 'si-map',
         'before_widget' => null,
@@ -77,6 +84,7 @@ function si_register()
     ]);
 
     register_widget('si_widget_text');
+    register_widget('si_widget_contacts');
 }
 
 function _si_assets_path($path)
