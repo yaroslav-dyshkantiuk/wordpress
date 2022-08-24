@@ -15,6 +15,7 @@ foreach ($widgets as $w) {
 add_action('after_setup_theme', 'si_setup');
 add_action('wp_enqueue_scripts', 'si_scripts');
 add_action('widgets_init', 'si_register');
+add_action('init', 'si_register_types');
 add_shortcode('si-paste-link', 'si_paste_link');
 
 add_filter('show_admin_bar', '__return_false');
@@ -99,6 +100,32 @@ function si_register()
     register_widget('si_widget_social_links');
     register_widget('si_widget_iframe');
     register_widget('si_widget_info');
+}
+
+function si_register_types()
+{
+    register_post_type('services', [
+        'labels' => [
+            'name'               => 'Услуги', // основное название для типа записи
+            'singular_name'      => 'Услуга', // название для одной записи этого типа
+            'add_new'            => 'Добавить новую услугу', // для добавления новой записи
+            'add_new_item'       => 'Добавить новую услугу', // заголовка у вновь создаваемой записи в админ-панели.
+            'edit_item'          => 'Редактировать услугу', // для редактирования типа записи
+            'new_item'           => 'Новая услуга', // текст новой записи
+            'view_item'          => 'Смотреть услуги', // для просмотра записи этого типа.
+            'search_items'       => 'Искать услуги', // для поиска по этим типам записи
+            'not_found'          => 'Не найдено', // если в результате поиска ничего не было найдено
+            'not_found_in_trash' => 'Не найдено в корзине', // если не было найдено в корзине
+            'parent_item_colon'  => '', // для родителей (у древовидных типов)
+            'menu_name'          => 'Услуги', // название меню
+        ],
+        'public'              => true,
+        'menu_position'       => 20,
+        'menu_icon'           => 'dashicons-smiley',
+        'hierarchical'        => false,
+        'supports'            => ['title'],
+        'has_archive' => true
+    ]);
 }
 
 function si_paste_link($attr)
