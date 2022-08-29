@@ -17,7 +17,7 @@ add_action('wp_enqueue_scripts', 'si_scripts');
 add_action('widgets_init', 'si_register');
 add_action('init', 'si_register_types');
 add_action('add_meta_boxes', 'si_meta_boxes');
-add_action('save_post', 'si_save_like_meta');
+// add_action('save_post', 'si_save_like_meta');
 add_action('admin_init', 'si_register_slogan');
 add_action('admin_post_nopriv_si-modal-form', 'si_modal_form_handler');
 add_action('admin_post_si-modal-form', 'si_modal_form_handler');
@@ -268,7 +268,7 @@ function si_register_types()
     register_post_type('orders', [
         'labels' => [
             'name'               => 'Заявки', // основное название для типа записи
-            'singular_name'      => 'Заява', // название для одной записи этого типа
+            'singular_name'      => 'Заявка', // название для одной записи этого типа
             'add_new'            => 'Добавить новую заявку', // для добавления новой записи
             'add_new_item'       => 'Добавить новую заявку', // заголовка у вновь создаваемой записи в админ-панели.
             'edit_item'          => 'Редактировать заявку', // для редактирования типа записи
@@ -329,6 +329,24 @@ function si_meta_boxes()
         'si_meta_like_cb',
         'post'
     );
+
+    $fields = [
+        'si_order_date' => 'Дата заявки: ',
+        'si_order_name' => 'Имя клиента: ',
+        'si_order_phone' => 'Номер клиента: ',
+        'si_order_choice' => 'Выбор клиетна: ',
+    ];
+    foreach ($fields as $slug => $text) {
+        add_meta_box(
+            $slug,
+            $text,
+            'si_order_fields_cb',
+            'orders',
+            'advanced',
+            'default',
+            $slug
+        );
+    }
 }
 
 function si_meta_like_cb($post_obj)
@@ -339,12 +357,21 @@ function si_meta_like_cb($post_obj)
     echo '<p>' . $likes . '</p>';
 }
 
-function si_save_like_meta($post_id)
+function si_order_fields_cb($post_obj, $slug)
 {
-    if (isset($_POST['si-like'])) {
-        update_post_meta($post_id, 'si-like', $_POST['si-like']);
-    }
+    $slug = $slug['args'];
+    $data = get_post_meta($post_obj->ID, $slug, true);
+    $data = $data ? $data : 'Нет данных';
+    echo '<span>' . $data . '</span>';
 }
+
+
+// function si_save_like_meta($post_id)
+// {
+//     if (isset($_POST['si-like'])) {
+//         update_post_meta($post_id, 'si-like', $_POST['si-like']);
+//     }
+// }
 
 function si_register_slogan()
 {
