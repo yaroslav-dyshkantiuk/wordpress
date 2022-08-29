@@ -308,8 +308,8 @@ function si_meta_like_cb($post_obj)
 {
     $likes = get_post_meta($post_obj->ID, 'si-like', true);
     $likes = $likes ? $likes : 0;
-    echo "<input type=\"text\" name=\"si-like\" value=\"${likes}\"";
-    // echo '<p>' . $likes . '</p>';
+    // echo "<input type=\"text\" name=\"si-like\" value=\"${likes}\"";
+    echo '<p>' . $likes . '</p>';
 }
 
 function si_save_like_meta($post_id)
@@ -352,8 +352,22 @@ function si_modal_form_handler()
 
 function si_likes()
 {
-    echo 'All recived!';
-    wp_die();
+    $id = $_POST['id'];
+    $todo = $_POST['todo'];
+    $current_data = get_post_meta($id, 'si-like', true);
+    $current_data = $current_data ? $current_data : 0;
+    if ($todo === 'plus') {
+        $current_data++;
+    } else {
+        $current_data--;
+    }
+    $res = update_post_meta($id, 'si-like', $current_data);
+    if ($res) {
+        echo $current_data;
+        wp_die();
+    } else {
+        wp_die('Like not saved! Try again.', 500);
+    }
 }
 
 function _si_assets_path($path)

@@ -51,7 +51,7 @@
                             function getAboutLike(id) {
                                 let hasLike = false;
                                 try {
-                                    hasLike = localStorage.getItem('liked').split(',').includes('id');
+                                    hasLike = localStorage.getItem('liked').split(',').includes(id);
                                 } catch (error) {
                                     console.log(error);
                                 }
@@ -63,7 +63,6 @@
                             }
                             likeBtn.addEventListener('click', function(e) {
                                 e.preventDefault();
-                                likeBtn.disabled = true;
                                 let hasLike = getAboutLike(postID);
                                 const data = new FormData();
                                 data.append('action', 'post-likes');
@@ -73,6 +72,7 @@
                                 const xhr = new XMLHttpRequest();
                                 xhr.open('POST', likeBtn.getAttribute('data-href'));
                                 xhr.send(data);
+                                likeBtn.disabled = true;
                                 xhr.addEventListener('readystatechange', function() {
                                     if (xhr.readyState !== 4) return;
                                     if (xhr.status === 200) {
@@ -80,12 +80,12 @@
                                         let localData = localStorage.getItem('liked');
                                         let newData = '';
                                         if (hasLike) {
-                                            newData = localData.split(',').filter(function(el) {
-                                                return el !== postID;
+                                            newData = localData.split(',').filter(function(id) {
+                                                return id !== postID;
                                             }).join(',');
                                         } else {
-                                            newData = localData.split(',').filter(function(el) {
-                                                return el !== '';
+                                            newData = localData.split(',').filter(function(id) {
+                                                return id !== '';
                                             }).concat(postID).join(',');
                                         }
                                         localStorage.setItem('liked', newData);
