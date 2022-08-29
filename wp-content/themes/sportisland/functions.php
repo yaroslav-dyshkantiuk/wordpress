@@ -19,6 +19,8 @@ add_action('init', 'si_register_types');
 add_action('add_meta_boxes', 'si_meta_boxes');
 add_action('save_post', 'si_save_like_meta');
 add_action('admin_init', 'si_register_slogan');
+add_action('admin_post_nopriv_si-modal-form', 'si_modal_form_handler');
+add_action('admin_post_si-modal-form', 'si_modal_form_handler');
 add_shortcode('si-paste-link', 'si_paste_link');
 
 add_filter('show_admin_bar', '__return_false');
@@ -335,10 +337,16 @@ function si_register_slogan()
 function si_option_slogan_cb($argc)
 {
     $slug = $argc['label_for'];
+
 ?>
-    <input type="text" id="<?php echo $slug; ?>" value="<?php echo get_option($slug); ?>" name="<?php echo $slug; ?>" class="regular-text">
+    // <input type="text" id="<?php echo $slug; ?>" value="<?php echo get_option($slug); ?>" name="<?php echo $slug; ?>" class="regular-text">
 
 <?php
+}
+
+function si_modal_form_handler()
+{
+    header('Location: ' . home_url());
 }
 
 function _si_assets_path($path)
