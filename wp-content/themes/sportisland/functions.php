@@ -24,9 +24,11 @@ add_action('admin_post_si-modal-form', 'si_modal_form_handler');
 add_action('wp_ajax_nopriv_post-likes', 'si_likes');
 add_action('wp_ajax_post-likes', 'si_likes');
 add_shortcode('si-paste-link', 'si_paste_link');
+add_action('manage_posts_custom_column', 'si_like_column', 5, 2);
 
 add_filter('show_admin_bar', '__return_false');
 add_filter('si_widget_text', 'do_shortcode');
+add_filter('manage_posts_columns', 'si_add_col_likes');
 
 function si_setup()
 {
@@ -368,6 +370,22 @@ function si_likes()
     } else {
         wp_die('Like not saved! Try again.', 500);
     }
+}
+
+function si_like_column($col_name, $id)
+{
+    if ($col_name !== 'col_likes') return;
+    $likes = get_post_meta($id, 'si-like', true);
+    echo $likes ? $likes : 0;
+}
+
+function si_add_col_likes($defaults)
+{
+    $type = get_current_screen();
+    if ($type->post_type === 'post') {
+        $defaults['col_likes'] = 'Лайки';
+    }
+    return $defaults;
 }
 
 function _si_assets_path($path)
