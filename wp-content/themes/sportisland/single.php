@@ -45,15 +45,15 @@
                                     localStorage.setItem('liked', '');
                                 }
                             } catch (error) {
-                                console.log(e);
+                                console.log(error);
                             }
 
                             function getAboutLike(id) {
                                 let hasLike = false;
                                 try {
-                                    hasLike = localStorage('liked').split(',').includes('id');
-                                } catch (e) {
-                                    console.log(e);
+                                    hasLike = localStorage.getItem('liked').split(',').includes('id');
+                                } catch (error) {
+                                    console.log(error);
                                 }
                                 return hasLike;
                             }
@@ -61,11 +61,40 @@
                             if (hasLike) {
                                 likeBtn.classList.add('like_liked')
                             }
-                            likeBtn.addEventListener('click', function() {
+                            likeBtn.addEventListener('click', function(e) {
                                 e.preventDefault();
+                                likeBtn.disabled = true;
                                 let hasLike = getAboutLike(postID);
                                 const data = new FormData();
                                 data.append('action', 'post-likes');
+                                let todo = hasLike ? 'minus' : 'plus';
+                                data.append('todo', todo);
+                                data.append('id', postID);
+                                const xhr = new XMLHttpRequest();
+                                xhr.open('POST', likeBtn.getAttribute('data-href'));
+                                xhr.send(data);
+                                xhr.addEventListener('readystatechange', function() {
+                                    if (xhr.readyState !== 4) return;
+                                    if (xhr.status === 200) {
+                                        likeBtn.querySelector('.like__count').innerText = xhr.responseText;
+                                        let localData = localStorage.getItem('liked');
+                                        let newData = '';
+                                        if (hasLike) {
+                                            newData = localData.split(',').filter(function(el) {
+                                                return el !== postID;
+                                            }).join(',');
+                                        } else {
+                                            newData = localData.split(',').filter(function(el) {
+                                                return el !== '';
+                                            }).concat(postID).join(',');
+                                        }
+                                        localStorage.setItem('liked', newData);
+                                        likeBtn.classList.toggle('like_liked')
+                                    } else {
+                                        console.log(xhr.statusText);
+                                    }
+                                    likeBtn.disabled = false;
+                                })
                             })
                         })
                     </script>
