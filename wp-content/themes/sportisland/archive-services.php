@@ -29,7 +29,7 @@ get_header();
               <?php the_field('services_decription'); ?>
             </p>
             <p class="service__action">
-              <a href="#" class="service__subscribe btn">записаться</a>
+              <a data-post-id="<?php echo $id; ?>" href="#modal-form" class="service__subscribe btn btn_modal">записаться</a>
               <strong class="service__price price">
                 <?php the_field('services_price'); ?>
                 <span class="price__unit">р./мес.</span>
