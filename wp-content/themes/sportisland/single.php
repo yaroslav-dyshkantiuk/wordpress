@@ -19,7 +19,7 @@
                 <?php the_content(); ?>
                 <footer class="main-article__footer">
                     <time datetime="<?php echo get_the_date('Y-m-d'); ?>"><?php echo get_the_date('d F Y'); ?></time>
-                    <a href="#" class="main-article__like like">
+                    <button class="main-article__like like" style="background-color: transparent;border: none; font: inherit; font-size: 16px; cursor: pointer;" data-href="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" data-id="<?php echo $id; ?>">
                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 51.997 51.997" style="enable-background:new 0 0 51.997 51.997;" xml:space="preserve">
                             <style>
                                 path {
@@ -35,7 +35,40 @@
                             echo $likes ? $likes : 0;
                             ?>
                         </span>
-                    </a>
+                    </button>
+                    <script>
+                        window.addEventListener('load', function() {
+                            const likeBtn = document.querySelector('.like');
+                            const postID = likeBtn.getAttribute('data-id');
+                            try {
+                                if (!localStorage.getItem('liked')) {
+                                    localStorage.setItem('liked', '');
+                                }
+                            } catch (error) {
+                                console.log(e);
+                            }
+
+                            function getAboutLike(id) {
+                                let hasLike = false;
+                                try {
+                                    hasLike = localStorage('liked').split(',').includes('id');
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                                return hasLike;
+                            }
+                            let hasLike = getAboutLike(postID);
+                            if (hasLike) {
+                                likeBtn.classList.add('like_liked')
+                            }
+                            likeBtn.addEventListener('click', function() {
+                                e.preventDefault();
+                                let hasLike = getAboutLike(postID);
+                                const data = new FormData();
+                                data.append('action', 'post-likes');
+                            })
+                        })
+                    </script>
                 </footer>
             </article>
     <?php
