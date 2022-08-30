@@ -110,7 +110,7 @@ function cnl_admin_page_view()
         <br>
         <button type="submit">Сохранить настройки</button>
     </form>
-<?php
+    <?php
 }
 
 
@@ -118,50 +118,79 @@ add_action('wp_footer', 'cnl_front_page_view');
 
 function cnl_front_page_view()
 {
-    $bg = get_option('cnl_bg');
-    $color = get_option('cnl_color');
-    $text = get_option('cnl_text');
-    $position = get_option('cnl_position');
-    $css = $position . ': 0;';
-?>
-    <div class="alert">
-        <div class="wrapper">
-            <?php echo $text; ?>
-            <br>
-            <button class="alert__btn">Я согласен</button>
+    if ($_COOKIE['cnl_cookie_agreement'] !== 'agreed') :
+        $bg = get_option('cnl_bg');
+        $color = get_option('cnl_color');
+        $text = get_option('cnl_text');
+        $position = get_option('cnl_position');
+        $css = $position . ': 0;';
+    ?>
+        <div class="alert">
+            <div class="wrapper">
+                <?php echo $text; ?>
+                <br>
+                <button class="alert__btn">Я согласен</button>
+            </div>
+            <style>
+                .alert {
+                    color: <?php echo $color; ?>;
+                    background-color: <?php echo $bg; ?>;
+                    position: fixed;
+                    text-align: center;
+                    font-size: 30px;
+                    padding: 20px 10px;
+                    z-index: 99999;
+                    left: 0;
+                    width: 100%;
+                    <?php echo $css; ?>
+                }
+
+                .alert button {
+                    border: 1px solid <?php echo $color; ?>;
+                    background-color: transparent;
+                    font: inherit;
+                    font-size: 14px;
+                    color: <?php echo $color; ?>;
+                    padding: 10px 20px;
+                    cursor: pointer;
+                }
+
+                .alert button:hover,
+                .alert button:hover,
+                .alert button:focus {
+                    background-color: <?php echo $color; ?>;
+                    color: <?php echo $bg; ?>;
+                    transition: 0.3s;
+                }
+            </style>
+            <script>
+                const url = "<?php echo esc_url(admin_url('admin-ajax.php')); ?>";
+                const btn = document.querySelector('.alert__btn');
+                btn.addEventListener('click', function(e) {
+                    const data = new FormData();
+                    data.append('action', 'cnl_cookie_ajax');
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', url);
+                    xhr.send(data);
+                    xhr.addEventListener('readystatechange', function() {
+                        if (xhr.readyState !== 4) return;
+                        if (xhr.status === 200) {
+                            btn.parentElement.parentElement.remove()
+                        }
+                    })
+                });
+            </script>
         </div>
-        <style>
-            .alert {
-                color: <?php echo $color; ?>;
-                background-color: <?php echo $bg; ?>;
-                position: fixed;
-                text-align: center;
-                font-size: 30px;
-                padding: 20px 10px;
-                z-index: 99999;
-                left: 0;
-                width: 100%;
-                <?php echo $css; ?>
-            }
-
-            .alert button {
-                border: 1px solid <?php echo $color; ?>;
-                background-color: transparent;
-                font: inherit;
-                font-size: 14px;
-                color: <?php echo $color; ?>;
-                padding: 10px 20px;
-                cursor: pointer;
-            }
-
-            .alert button:hover,
-            .alert button:hover,
-            .alert button:focus {
-                background-color: <?php echo $color; ?>;
-                color: <?php echo $bg; ?>;
-                transition: 0.3s;
-            }
-        </style>
-    </div>
 <?php
+    endif;
+}
+
+add_action('wp_ajax_nopriv_cnl_cookie_ajax', 'cnl_ajax_handler');
+add_action('wp_ajax_cnl_cookie_ajax', 'cnl_ajax_handler');
+
+function cnl_ajax_handler()
+{
+    setcookie('cnl_cookie_agreement', 'agreed', time() + 60 * 60 * 24 * 30, '/');
+    echo 'OK';
+    wp_die();
 }
