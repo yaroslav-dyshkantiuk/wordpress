@@ -47,13 +47,6 @@ function cnl_deactivation()
     }
 }
 
-// add_action('wp_footer', function () {
-//     $options = options();
-//     foreach ($options as $key => $value) {
-//         echo $key . ' => ' . get_option($key, $value) . '<br>';
-//     }
-// });
-
 add_action('admin_menu', 'cnl_register_menu');
 
 function cnl_register_menu()
@@ -117,5 +110,58 @@ function cnl_admin_page_view()
         <br>
         <button type="submit">Сохранить настройки</button>
     </form>
+<?php
+}
+
+
+add_action('wp_footer', 'cnl_front_page_view');
+
+function cnl_front_page_view()
+{
+    $bg = get_option('cnl_bg');
+    $color = get_option('cnl_color');
+    $text = get_option('cnl_text');
+    $position = get_option('cnl_position');
+    $css = $position . ': 0;';
+?>
+    <div class="alert">
+        <div class="wrapper">
+            <?php echo $text; ?>
+            <br>
+            <button class="alert__btn">Я согласен</button>
+        </div>
+        <style>
+            .alert {
+                color: <?php echo $color; ?>;
+                background-color: <?php echo $bg; ?>;
+                position: fixed;
+                text-align: center;
+                font-size: 30px;
+                padding: 20px 10px;
+                z-index: 99999;
+                left: 0;
+                width: 100%;
+                <?php echo $css; ?>
+            }
+
+            .alert button {
+                border: 1px solid <?php echo $color; ?>;
+                background-color: transparent;
+                font: inherit;
+                font-size: 14px;
+                color: <?php echo $color; ?>;
+                padding: 10px 20px;
+                cursor: pointer;
+            }
+
+            .alert button:hover,
+            .alert button:hover,
+            .alert button:focus {
+                background-color: <?php echo $color; ?>;
+                color: <?php echo $bg; ?>;
+                transition: 0.3s;
+            }
+        </style>
+    </div>
 <?php
 }
