@@ -8,27 +8,30 @@ get_header();
     <h1 class="main-heading schedule-page__h">расписание</h1>
     <div class="tabs">
       <ul class="tabs-btns">
-        <li class="tabs-btns__item active-tab">
-          <a href="#mon" class="tabs-btns__btn"> Пн </a>
+        <?php
+        $days = get_terms([
+          'taxonomy' => 'schedule_days',
+          'order' => 'ASC',
+          'orderby' => 'slug'
+        ]);
+        $index = 0;
+        $active_class = '';
+        foreach ($days as $day) :
+          if ($index === 0) {
+            $active_class = ' active-tab';
+          } else {
+            $active_class = '';
+          }
+        ?>
+        <li class="tabs-btns__item<?php echo $active_class; ?>">
+          <a href="#<?php echo $day->slug; ?>" class="tabs-btns__btn" aria-label="<?php echo $day->$description; ?>">
+            <?php echo $day->name; ?>
+          </a>
         </li>
-        <li class="tabs-btns__item">
-          <a href="#tue" class="tabs-btns__btn"> Вт </a>
-        </li>
-        <li class="tabs-btns__item">
-          <a href="#wed" class="tabs-btns__btn"> Ср </a>
-        </li>
-        <li class="tabs-btns__item">
-          <a href="#thur" class="tabs-btns__btn"> Чт </a>
-        </li>
-        <li class="tabs-btns__item">
-          <a href="#fri" class="tabs-btns__btn"> Пт </a>
-        </li>
-        <li class="tabs-btns__item">
-          <a href="#sat" class="tabs-btns__btn"> Сб </a>
-        </li>
-        <li class="tabs-btns__item">
-          <a href="#sun" class="tabs-btns__btn"> Вс </a>
-        </li>
+        <?php
+          $index++;
+        endforeach;
+        ?>
       </ul>
       <ul class="tabs-content">
         <li class="tabs-content__item active-tab" id="mon">
