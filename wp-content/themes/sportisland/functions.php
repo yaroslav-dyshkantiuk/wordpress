@@ -38,6 +38,7 @@ function si_setup()
     add_theme_support('custom-logo');
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    add_image_size('si_pic', 600, 240, true);
     // add_theme_support('menus');
 }
 
