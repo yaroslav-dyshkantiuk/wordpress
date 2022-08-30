@@ -409,7 +409,8 @@ function si_option_slogan_cb($argc)
     $slug = $argc['label_for'];
 
 ?>
-    <input type="text" id="<?php echo $slug; ?>" value="<?php echo get_option($slug); ?>" name="<?php echo $slug; ?>" class="regular-text">
+<input type="text" id="<?php echo $slug; ?>" value="<?php echo get_option($slug); ?>" name="<?php echo $slug; ?>"
+  class="regular-text">
 <?php
 }
 
