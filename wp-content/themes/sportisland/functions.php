@@ -58,6 +58,7 @@ function si_scripts()
         '1.0',
         'all'
     );
+    wp_dequeue_style('wp-block-library');
 }
 
 function si_register()
